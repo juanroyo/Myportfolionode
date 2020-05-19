@@ -274,3 +274,6 @@ async function run() {
 }
 
 run().catch(console.dir);
+app.listen('polar-meadow-31783.herokuapp.com', function(){
+console.log('Back is running')
+});
