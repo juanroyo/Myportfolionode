@@ -4,9 +4,12 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [
+    "example",
+    "heroku"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -29,5 +32,8 @@
   },
   "devDependencies": {
     "dotenv": "^8.2.0"
+  },
+  "engines": {
+    "node": "12.16.1"
   }
 }
