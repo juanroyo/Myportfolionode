@@ -184,18 +184,19 @@ app.post('/contact', function(req, res) {
 });
 
 //-------------SHOP-----------------
-async function shopPost(req, res) {
-  var dbo = db.db("mydb");
-
-  return await dbo.collection("Albums").find({}).toArray(function(err, result) {
+app.get('/shop', function(req, res) {
+  MongoClient.connect(url, function(err, db) {
     if (err) throw err;
+    var dbo = db.db("mydb");
 
-    res.json(result);
+    dbo.collection("Albums").find().toArray(function(err, result) {
+      if (err) throw err;
 
+      res.json(result);
+      db.close();
+    });
   });
-}
-
-app.get('/shop', shopPost);
+});
 app.get('/offers', function(req, res) {
   MongoClient.connect(url, function(err, db) {
     if (err) throw err;
