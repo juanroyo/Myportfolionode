@@ -1,4 +1,3 @@
-
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
@@ -25,15 +24,13 @@ const methodOverride = require('method-override')
 const MongoClient = require('mongodb').MongoClient;
 const router = express.Router();
 //var url = "mongodb://localhost:27017/";
-app.set('db', require('./models.js'));
+app.set('db', require('./endpoints.js'));
 
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json({ type: 'application/json' }));
 app.use(cors());
-
-
 
 
 //-------------CART----------------
@@ -73,12 +70,12 @@ app.post("/cart", (req, res) => {
       var mail = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-          user: 'ju.val.roy@gmail.com',
+          user: 'zylenstudio@gmail.com',
           pass: 'Manolito.1'
         }
       });
        var mailOptions = {
-          from: 'ju.val.roy@gmail.com',
+          from: 'zylenstudio@gmail.com',
           to: emailAddress,
           subject: 'Sending Email using Node.js',
           html: `<td><h1>thanks for buying ${productosParaEnviar.map(function(item, index) {
@@ -134,19 +131,8 @@ app.get('/cart', function(req, res) {
 });
 
 
-app.get('/cart/:id', function(req, res) {
-  MongoClient.connect(url, function(err, db) {
-    if (err) throw err;
-    var dbo = db.db("mydb");
-    var albumid = req.params._id;
-    dbo.collection("Albums").find(albumid).toArray(function(err, result) {
-      if (err) throw err;
-      console.log(result)
-      res.json(result);
-      db.close();
-    });
-  });
-});
+
+
 
 //--------CONTACT POST-------------
 app.post('/contact', function(req, res) {
@@ -159,13 +145,13 @@ app.post('/contact', function(req, res) {
    var mail = nodemailer.createTransport({
      service: 'gmail',
      auth: {
-       user: 'ju.val.roy@gmail.com',
+       user: 'zylenstudio@gmail.com',
        pass: 'Manolito.1'
      }
    });
     var mailOptions = {
        from:  emailAddress,
-       to: 'ju.val.roy@gmail.com',
+       to: 'zylenstudio@gmail.com',
        subject: 'Sending Email using Node.js',
        html: `<td><p>${message}</p></td><td><p>That was easy!${emailAddress}</p></td>`
      }
@@ -198,19 +184,18 @@ app.post('/contact', function(req, res) {
 });
 
 //-------------SHOP-----------------
-app.get('/shop', function(req, res) {
-  MongoClient.connect(url, function(err, db) {
+async function shopPost(req, res) {
+  var dbo = db.db("mydb");
+
+  return await dbo.collection("Albums").find({}).toArray(function(err, result) {
     if (err) throw err;
-    var dbo = db.db("mydb");
 
-    dbo.collection("Albums").find().toArray(function(err, result) {
-      if (err) throw err;
+    res.json(result);
 
-      res.json(result);
-      db.close();
-    });
   });
-});
+}
+
+app.get('/shop', shopPost);
 app.get('/offers', function(req, res) {
   MongoClient.connect(url, function(err, db) {
     if (err) throw err;
@@ -226,19 +211,7 @@ app.get('/offers', function(req, res) {
 });
 
 
-app.get('/shop/:id', function(req, res) {
-  MongoClient.connect(url, function(err, db) {
-    if (err) throw err;
-    var dbo = db.db("mydb");
 
-    dbo.collection("Albums").find().toArray(function(err, result) {
-      if (err) throw err;
-      console.log(result)
-      res.json(result);
-      db.close();
-    });
-  });
-});
 
 app.get('/login', function(req, res) {
   MongoClient.connect(url, function(err, db) {
