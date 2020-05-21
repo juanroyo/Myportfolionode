@@ -30,9 +30,19 @@ app.set('db', require('./endpoints.js'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json({ type: 'application/json' }));
-app.use(cors());
+corsOptions = {
+  origin: "https://zylen.herokuapp.com",
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+app.use(cors(corsOptions));
+var serveroption = {
+  useUnifiedTopology: true,
+  useNewUrlParser: true,
+  connectWithNoPrimary: false,
+  connectTimeoutMS: 30000
+}
 const url = "mongodb+srv://juanar:KELi1aO0zTS5pF1v@cluster0-axx5n.mongodb.net/test?retryWrites=true&w=majority";
-MongoClient.connect(url, function(err, db) {
+MongoClient.connect(url, serveroption, function(err, db) {
   if (err) throw err;
 //-------------CART----------------
 app.post("/cart", (req, res) => {
