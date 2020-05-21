@@ -32,7 +32,8 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json({ type: 'application/json' }));
 app.use(cors());
 
-
+MongoClient.connect(url, function(err, db) {
+  if (err) throw err;
 //-------------CART----------------
 app.post("/cart", (req, res) => {
 
@@ -98,7 +99,7 @@ app.post("/cart", (req, res) => {
             console.log('Email sent: ' + info.response);
           }
         })
-      }).then(MongoClient.connect(url, function(err, db) {
+      }).then( function(req, res) {
           if (err) throw err;
           var dbo = db.db("mydb");
 
@@ -113,22 +114,21 @@ app.post("/cart", (req, res) => {
             res.json(result);
             db.close();
           })
-        })).then(result =>  res.status(200).json(result))
+        }).then(result =>  res.status(200).json(result))
      .catch(err => console.log(err))
 });
 
 app.get('/cart', function(req, res) {
-  MongoClient.connect(url, function(err, db) {
-    if (err) throw err;
+
     var dbo = db.db("mydb");
     dbo.collection("Albums").find().toArray(function(err, result) {
       if (err) throw err;
       console.log(result)
       res.json(result);
-      db.close();
+
     });
   });
-});
+
 
 
 
@@ -164,8 +164,7 @@ app.post('/contact', function(req, res) {
      });
    }
    sendEmail()
-     MongoClient.connect(url, function(err, db) {
-    if (err) throw err;
+
     console.log("hola" + req.body);
     var dbo = db.db("mydb");
     var myobj = {
@@ -176,30 +175,28 @@ app.post('/contact', function(req, res) {
       if (err) throw err;
       console.log("1 document inserted");
       res.json(result);
-      db.close();
+
 
 })
 })
 
-});
+
 
 //-------------SHOP-----------------
 app.get('/shop', function(req, res) {
-  MongoClient.connect(url, function(err, db) {
-    if (err) throw err;
+
     var dbo = db.db("mydb");
 
     dbo.collection("Albums").find().toArray(function(err, result) {
       if (err) throw err;
 
       res.json(result);
-      db.close();
+
     });
   });
-});
+
 app.get('/offers', function(req, res) {
-  MongoClient.connect(url, function(err, db) {
-    if (err) throw err;
+
     var dbo = db.db("mydb");
 
     dbo.collection("Offers").find().toArray(function(err, result) {
@@ -209,14 +206,13 @@ app.get('/offers', function(req, res) {
       db.close();
     });
   });
-});
+
 
 
 
 
 app.get('/login', function(req, res) {
-  MongoClient.connect(url, function(err, db) {
-    if (err) throw err;
+
     var dbo = db.db("mydb");
 
     dbo.collection("Payments").find({}, { projection: { _id: 1, email: 1, products: 1,  total: 1 } }).toArray(function(err, result) {
