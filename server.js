@@ -212,7 +212,7 @@ app.get('/offers', function(req, res) {
       if (err) throw err;
 
       res.json(result);
-      db.close();
+  
     });
   });
 
