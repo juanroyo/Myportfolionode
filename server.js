@@ -194,11 +194,11 @@ app.post('/contact', sendEmail, function(req, res) {
 
 
 //-------------SHOP-----------------
-app.get('/shop', function(req, res) {
+app.get('/shop', async function(req, res) {
 
     var dbo = db.db("mydb");
 
-    dbo.collection("Albums").find().toArray(function(err, result) {
+    return await dbo.collection("Albums").find({}).toArray(function(err, result) {
       if (err) throw err;
 
       res.json(result);
@@ -206,11 +206,11 @@ app.get('/shop', function(req, res) {
     });
   });
 
-app.get('/offers', function(req, res) {
+app.get('/offers', async function(req, res) {
 
     var dbo = db.db("mydb");
 
-    dbo.collection("Offers").find().toArray(function(err, result) {
+  return await dbo.collection("Offers").find({}, projection: { _id: 1, email: 1, products: 1,  total: 1 }}).toArray(function(err, result) {
       if (err) throw err;
 
       res.json(result);
@@ -222,11 +222,11 @@ app.get('/offers', function(req, res) {
 
 
 
-app.get('/login', function(req, res) {
+app.get('/login',async function(req, res) {
 
     var dbo = db.db("mydb");
 
-    dbo.collection("Payments").find({}, { projection: { _id: 1, email: 1, products: 1,  total: 1 } }).toArray(function(err, result) {
+    return await dbo.collection("Payments").find({}, { projection: { _id: 1, email: 1, products: 1,  total: 1 } }).toArray(function(err, result) {
       if (err) throw err;
 
       res.json(result);
