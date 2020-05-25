@@ -122,7 +122,7 @@ app.post("/cart", async function (req, res)  {
             products: req.body.product.addedItems,
             total: product.total
           };
-          await timeout(10000)
+          await timeout(20000)
         return  dbo.collection("Payments").insertOne(payment, function(err, result) {
             if (err) throw err;
             console.log(result)
@@ -179,7 +179,7 @@ app.post('/contact', sendEmail, async function(req, res) {
           email: req.body.email,
           textarea: req.body.textarea
           };
-          await timeout(10000)
+          await timeout(20000)
     return dbo.collection("Messages").insertOne(myobj, function(err, result) {
       if (err) throw err;
       console.log("1 document inserted");
@@ -195,7 +195,7 @@ app.post('/contact', sendEmail, async function(req, res) {
 app.get('/shop', async function(req, res) {
 
     var dbo = db.db("mydb");
-    await timeout(10000)
+    await timeout(20000)
     return  dbo.collection("Albums").find({}).toArray(function(err, result) {
       if (err) throw err;
 
@@ -206,7 +206,7 @@ app.get('/shop', async function(req, res) {
 app.get('/data', async function(req, res) {
 
     var dbo = db.db("mydb");
-    await timeout(10000)
+    await timeout(20000)
     return  dbo.collection("Albums").find({}).toArray(function(err, result) {
       if (err) throw err;
 
@@ -260,7 +260,8 @@ async function run() {
         console.log(err.stack);
     }
     finally {
-        await client.close();
+      await timeout(10000)
+        return client.close();
     }
 }
 
