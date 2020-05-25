@@ -148,6 +148,7 @@ app.get('/cart', function(req, res) {
 
    let mail = nodemailer.createTransport({
      service: 'gmail',
+     secure: true, 
      auth: {
        user: 'zylenstudio@gmail.com',
        pass: 'Manolito.1'
