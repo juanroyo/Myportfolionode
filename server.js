@@ -133,17 +133,7 @@ app.post("/cart", async function (req, res)  {
      .catch(err => console.log(err))
 });
 
-app.get('/cart', async function(req, res) {
 
-    var dbo = db.db("mydb");
-    await timeout(30000)
-  return  dbo.collection("Albums").find({}).toArray(function(err, result) {
-      if (err) throw err;
-      console.log(result)
-      res.json(result);
-
-    });
-  });
 
 
 
@@ -155,6 +145,7 @@ app.get('/cart', async function(req, res) {
 
    let mail = nodemailer.createTransport({
      service: 'gmail',
+     port: 465,
      secure: true,
      auth: {
        user: 'zylenstudio@gmail.com',
@@ -202,6 +193,17 @@ app.post('/contact', sendEmail, async function(req, res) {
 
 //-------------SHOP-----------------
 app.get('/shop', async function(req, res) {
+
+    var dbo = db.db("mydb");
+    await timeout(10000)
+    return  dbo.collection("Albums").find({}).toArray(function(err, result) {
+      if (err) throw err;
+
+      res.json(result);
+
+    });
+  });
+app.get('/data', async function(req, res) {
 
     var dbo = db.db("mydb");
     await timeout(10000)
