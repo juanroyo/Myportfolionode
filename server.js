@@ -43,6 +43,7 @@ var serveroption = {
 const url = "mongodb+srv://juanar:KELi1aO0zTS5pF1v@cluster0-axx5n.mongodb.net/test?retryWrites=true&w=majority";
 MongoClient.connect(url, serveroption, function(err, db) {
   if (err) throw err;
+    var dbo = db.db("mydb");
 //-------------CART----------------
 app.post("/cart", (req, res) => {
 
@@ -110,7 +111,7 @@ app.post("/cart", (req, res) => {
         })
       }).then( function(req, res) {
           if (err) throw err;
-          var dbo = db.db("mydb");
+
 
           var payment = {
             email: token.email,
@@ -121,7 +122,7 @@ app.post("/cart", (req, res) => {
             if (err) throw err;
             console.log(result)
             res.json(result);
-          
+
           })
         }).then(result =>  res.status(200).json(result))
      .catch(err => console.log(err))
@@ -129,7 +130,7 @@ app.post("/cart", (req, res) => {
 
 app.get('/cart', function(req, res) {
 
-    var dbo = db.db("mydb");
+
     dbo.collection("Albums").find().toArray(function(err, result) {
       if (err) throw err;
       console.log(result)
@@ -140,31 +141,26 @@ app.get('/cart', function(req, res) {
 
 
 
-
-
-
-//--------CONTACT POST-------------
-app.post('/contact', function(req, res) {
-  function sendEmail() {
-    var emailAddress = req.body.email;
-    var message =  req.body.textarea;
+  async function sendEmail() {
+    let emailAddress = req.body.email;
+    let message =  req.body.textarea;
     //var total = req.body.total;
     console.log("this is the function!")
 
-   var mail = nodemailer.createTransport({
+   let mail = nodemailer.createTransport({
      service: 'gmail',
      auth: {
        user: 'zylenstudio@gmail.com',
        pass: 'Manolito.1'
      }
    });
-    var mailOptions = {
+    let mailOptions = {
        from:  emailAddress,
        to: 'zylenstudio@gmail.com',
        subject: 'Sending Email using Node.js',
        html: `<td><p>${message}</p></td><td><p>That was easy!${emailAddress}</p></td>`
      }
-     mail.sendMail(mailOptions, function(error, info){
+   return await mail.sendMail(mailOptions, function(error, info){
        if (error) {
          console.log(error);
        } else {
@@ -172,10 +168,15 @@ app.post('/contact', function(req, res) {
        }
      });
    }
-   sendEmail()
+
+
+//--------CONTACT POST-------------
+app.post('/contact', sendEmail, function(req, res) {
+
+
 
     console.log("hola" + req.body);
-    var dbo = db.db("mydb");
+
     var myobj = {
           email: req.body.email,
           textarea: req.body.textarea
@@ -194,7 +195,7 @@ app.post('/contact', function(req, res) {
 //-------------SHOP-----------------
 app.get('/shop', function(req, res) {
 
-    var dbo = db.db("mydb");
+
 
     dbo.collection("Albums").find().toArray(function(err, result) {
       if (err) throw err;
@@ -206,7 +207,7 @@ app.get('/shop', function(req, res) {
 
 app.get('/offers', function(req, res) {
 
-    var dbo = db.db("mydb");
+
 
     dbo.collection("Offers").find().toArray(function(err, result) {
       if (err) throw err;
@@ -222,15 +223,16 @@ app.get('/offers', function(req, res) {
 
 app.get('/login', function(req, res) {
 
-    var dbo = db.db("mydb");
+
 
     dbo.collection("Payments").find({}, { projection: { _id: 1, email: 1, products: 1,  total: 1 } }).toArray(function(err, result) {
       if (err) throw err;
 
       res.json(result);
-      db.close();
+
     });
   });
+  db.close();
 });
 
 
@@ -242,7 +244,7 @@ const dbName = "test";
 async function run() {
     try {
         await client.connect();
-        console.log("Connected correctly to server");
+        console.log("Connected correctly to server!");
 
     } catch (err) {
         console.log(err.stack);
