@@ -44,6 +44,9 @@ var serveroption = {
 const url = "mongodb+srv://juanar:KELi1aO0zTS5pF1v@cluster0-axx5n.mongodb.net/test?retryWrites=true&w=majority";
 MongoClient.connect(url, serveroption, function(err, db) {
   if (err) throw err;
+  function timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 //-------------CART----------------
 app.post("/cart", async function (req, res)  {
 
