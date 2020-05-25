@@ -46,7 +46,7 @@ const url = "mongodb+srv://juanar:KELi1aO0zTS5pF1v@cluster0-axx5n.mongodb.net/te
 MongoClient.connect(url, serveroption, function(err, db) {
   if (err) throw err;
 //-------------CART----------------
-app.post("/cart", async function (req, res) => {
+app.post("/cart", async function (req, res)  {
 
      const {product, token} = req.body;
      console.log("PRODUCT", product.title);
@@ -64,23 +64,24 @@ app.post("/cart", async function (req, res) => {
          description: product.title,
 
        }).catch(err => console.log(err))
-     }).then(async function sendEmail() {
+     }).then(function sendEmail() {
        var products = req.body;
        JSON.stringify(products)
        var productosParaEnviar = products.product.addedItems;
        var ids = []
        productosParaEnviar.map(function(item, index) {
-         return await ids = item._id
+         return ids = item._id
          })
 
-       console.log("hola"+ids)
-       console.log("PRICE", productosParaEnviar);
+
        console.log("this is the function!")
 
       var emailAddress = token.email;
       var bodyMessage = '<table>';
       var mail = nodemailer.createTransport({
         service: 'gmail',
+        port: 465,
+    secure: true, 
         auth: {
           user: 'zylenstudio@gmail.com',
           pass: 'Manolito.1'
