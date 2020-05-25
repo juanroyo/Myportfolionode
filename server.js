@@ -140,7 +140,7 @@ app.get('/cart', function(req, res) {
 
 
 
-  async function sendEmail() {
+  async function sendEmail(req, res) {
     let emailAddress = req.body.email;
     let message =  req.body.textarea;
     //var total = req.body.total;
