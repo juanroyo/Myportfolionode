@@ -119,7 +119,8 @@ app.post("/cart", async function (req, res)  {
             products: req.body.product.addedItems,
             total: product.total
           };
-        return await dbo.collection("Payments").insertOne(payment, function(err, result) {
+          await timeout(10000)
+        return  dbo.collection("Payments").insertOne(payment, function(err, result) {
             if (err) throw err;
             console.log(result)
             res.json(result);
@@ -132,7 +133,8 @@ app.post("/cart", async function (req, res)  {
 app.get('/cart', async function(req, res) {
 
     var dbo = db.db("mydb");
-  return await dbo.collection("Albums").find({}).toArray(function(err, result) {
+    await timeout(30000)
+  return  dbo.collection("Albums").find({}).toArray(function(err, result) {
       if (err) throw err;
       console.log(result)
       res.json(result);
@@ -183,7 +185,8 @@ app.post('/contact', sendEmail, async function(req, res) {
           email: req.body.email,
           textarea: req.body.textarea
           };
-    return await dbo.collection("Messages").insertOne(myobj, function(err, result) {
+          await timeout(10000)
+    return dbo.collection("Messages").insertOne(myobj, function(err, result) {
       if (err) throw err;
       console.log("1 document inserted");
       res.json(result);
@@ -198,8 +201,8 @@ app.post('/contact', sendEmail, async function(req, res) {
 app.get('/shop', async function(req, res) {
 
     var dbo = db.db("mydb");
-
-    return await dbo.collection("Albums").find({}).toArray(function(err, result) {
+    await timeout(10000)
+    return  dbo.collection("Albums").find({}).toArray(function(err, result) {
       if (err) throw err;
 
       res.json(result);
@@ -210,8 +213,8 @@ app.get('/shop', async function(req, res) {
 app.get('/offers', async function(req, res) {
 
     var dbo = db.db("mydb");
-
-  return await dbo.collection("Offers").find({}).toArray(function(err, result) {
+    await timeout(10000)
+  return dbo.collection("Offers").find({}).toArray(function(err, result) {
       if (err) throw err;
 
       res.json(result);
@@ -226,8 +229,8 @@ app.get('/offers', async function(req, res) {
 app.get('/login',async function(req, res) {
 
     var dbo = db.db("mydb");
-
-    return await dbo.collection("Payments").find({}, { projection: { _id: 1, email: 1, products: 1,  total: 1 } }).toArray(function(err, result) {
+await timeout(10000)
+    return dbo.collection("Payments").find({}, { projection: { _id: 1, email: 1, products: 1,  total: 1 } }).toArray(function(err, result) {
       if (err) throw err;
 
       res.json(result);
