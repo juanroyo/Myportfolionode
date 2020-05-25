@@ -36,7 +36,7 @@ corsOptions = {
 };
 app.use(cors(corsOptions));
 var serveroption = {
-  useUnifiedTopology: true,
+
   useNewUrlParser: true,
   connectTimeoutMS: 30000,
   reconnectInterval: 1000
@@ -129,10 +129,10 @@ app.post("/cart", (req, res) => {
      .catch(err => console.log(err))
 });
 
-app.get('/cart', function(req, res) {
+app.get('/cart', async function(req, res) {
 
     var dbo = db.db("mydb");
-    dbo.collection("Albums").find().toArray(function(err, result) {
+  return await dbo.collection("Albums").find({}).toArray(function(err, result) {
       if (err) throw err;
       console.log(result)
       res.json(result);
@@ -173,7 +173,7 @@ app.get('/cart', function(req, res) {
 
 
 //--------CONTACT POST-------------
-app.post('/contact', sendEmail, function(req, res) {
+app.post('/contact', sendEmail, async function(req, res) {
 
 
 
@@ -183,7 +183,7 @@ app.post('/contact', sendEmail, function(req, res) {
           email: req.body.email,
           textarea: req.body.textarea
           };
-    dbo.collection("Messages").insertOne(myobj, function(err, result) {
+    return await dbo.collection("Messages").insertOne(myobj, function(err, result) {
       if (err) throw err;
       console.log("1 document inserted");
       res.json(result);
