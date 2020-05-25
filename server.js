@@ -43,7 +43,6 @@ var serveroption = {
 const url = "mongodb+srv://juanar:KELi1aO0zTS5pF1v@cluster0-axx5n.mongodb.net/test?retryWrites=true&w=majority";
 MongoClient.connect(url, serveroption, function(err, db) {
   if (err) throw err;
-    var dbo = db.db("mydb");
 //-------------CART----------------
 app.post("/cart", (req, res) => {
 
@@ -111,7 +110,7 @@ app.post("/cart", (req, res) => {
         })
       }).then( function(req, res) {
           if (err) throw err;
-
+          var dbo = db.db("mydb");
 
           var payment = {
             email: token.email,
@@ -130,7 +129,7 @@ app.post("/cart", (req, res) => {
 
 app.get('/cart', function(req, res) {
 
-
+    var dbo = db.db("mydb");
     dbo.collection("Albums").find().toArray(function(err, result) {
       if (err) throw err;
       console.log(result)
@@ -176,7 +175,7 @@ app.post('/contact', sendEmail, function(req, res) {
 
 
     console.log("hola" + req.body);
-
+    var dbo = db.db("mydb");
     var myobj = {
           email: req.body.email,
           textarea: req.body.textarea
@@ -195,7 +194,7 @@ app.post('/contact', sendEmail, function(req, res) {
 //-------------SHOP-----------------
 app.get('/shop', function(req, res) {
 
-
+    var dbo = db.db("mydb");
 
     dbo.collection("Albums").find().toArray(function(err, result) {
       if (err) throw err;
@@ -207,7 +206,7 @@ app.get('/shop', function(req, res) {
 
 app.get('/offers', function(req, res) {
 
-
+    var dbo = db.db("mydb");
 
     dbo.collection("Offers").find().toArray(function(err, result) {
       if (err) throw err;
@@ -223,7 +222,7 @@ app.get('/offers', function(req, res) {
 
 app.get('/login', function(req, res) {
 
-
+    var dbo = db.db("mydb");
 
     dbo.collection("Payments").find({}, { projection: { _id: 1, email: 1, products: 1,  total: 1 } }).toArray(function(err, result) {
       if (err) throw err;
