@@ -206,7 +206,7 @@ app.get('/shop', async function(req, res) {
 app.get('/data', async function(req, res) {
 
     var dbo = db.db("mydb");
-    await timeout(20000)
+    await timeout(5000)
     return  dbo.collection("Albums").find({}).toArray(function(err, result) {
       if (err) throw err;
 
