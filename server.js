@@ -1,8 +1,7 @@
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
-const stripePublicKey = process.env.STRIPE_PUBLIC_KEY;
+
 const emailp = process.env.EMAILP;
 const express = require('express')
 const app = express()
@@ -36,10 +35,10 @@ corsOptions = {
 };
 app.use(cors(corsOptions));
 var serveroption = {
-
   useNewUrlParser: true,
   connectTimeoutMS: 30000,
-  reconnectInterval: 1000
+  server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } },
+    replset: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } }
 
 }
 const url = "mongodb+srv://juanar:KELi1aO0zTS5pF1v@cluster0-axx5n.mongodb.net/test?retryWrites=true&w=majority";
@@ -81,7 +80,7 @@ app.post("/cart", async function (req, res)  {
       var mail = nodemailer.createTransport({
         service: 'gmail',
         port: 465,
-    secure: true, 
+    secure: true,
         auth: {
           user: 'zylenstudio@gmail.com',
           pass: 'Manolito.1'
