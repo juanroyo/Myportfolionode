@@ -38,8 +38,8 @@ app.use(cors(corsOptions));
 var serveroption = {
   useUnifiedTopology: true,
   useNewUrlParser: true,
-  server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } },
-  replset: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } }
+  connectTimeoutMS: 30000
+
 }
 const url = "mongodb+srv://juanar:KELi1aO0zTS5pF1v@cluster0-axx5n.mongodb.net/test?retryWrites=true&w=majority";
 MongoClient.connect(url, serveroption, function(err, db) {
