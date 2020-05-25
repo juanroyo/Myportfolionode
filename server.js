@@ -46,13 +46,13 @@ const url = "mongodb+srv://juanar:KELi1aO0zTS5pF1v@cluster0-axx5n.mongodb.net/te
 MongoClient.connect(url, serveroption, function(err, db) {
   if (err) throw err;
 //-------------CART----------------
-app.post("/cart", (req, res) => {
+app.post("/cart", async function (req, res) => {
 
      const {product, token} = req.body;
      console.log("PRODUCT", product.title);
      console.log("PRICE", product.total);
      const idempontencyKey = uuidv4()
-     return stripe.customers.create({
+     return await stripe.customers.create({
        email: token.email,
        source: token.id
      }).then(customer => {
@@ -64,13 +64,13 @@ app.post("/cart", (req, res) => {
          description: product.title,
 
        }).catch(err => console.log(err))
-     }).then(function sendEmail() {
+     }).then(async function sendEmail() {
        var products = req.body;
        JSON.stringify(products)
        var productosParaEnviar = products.product.addedItems;
        var ids = []
        productosParaEnviar.map(function(item, index) {
-         return ids = item._id
+         return await ids = item._id
          })
 
        console.log("hola"+ids)
@@ -110,7 +110,7 @@ app.post("/cart", (req, res) => {
             console.log('Email sent: ' + info.response);
           }
         })
-      }).then( function(req, res) {
+      }).then( async function(req, res) {
           if (err) throw err;
           var dbo = db.db("mydb");
 
@@ -119,7 +119,7 @@ app.post("/cart", (req, res) => {
             products: req.body.product.addedItems,
             total: product.total
           };
-          dbo.collection("Payments").insertOne(payment, function(err, result) {
+        return await dbo.collection("Payments").insertOne(payment, function(err, result) {
             if (err) throw err;
             console.log(result)
             res.json(result);
