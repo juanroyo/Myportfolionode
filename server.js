@@ -262,7 +262,7 @@ async function run() {
         console.log(err.stack);
     }
     finally {
-      await timeout(10000)
+      await timeout(5000)
         return client.close();
     }
 }
