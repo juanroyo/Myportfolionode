@@ -38,7 +38,8 @@ app.use(cors(corsOptions));
 var serveroption = {
   useUnifiedTopology: true,
   useNewUrlParser: true,
-  connectTimeoutMS: 30000
+  connectTimeoutMS: 30000,
+  reconnectInterval: 1000
 
 }
 const url = "mongodb+srv://juanar:KELi1aO0zTS5pF1v@cluster0-axx5n.mongodb.net/test?retryWrites=true&w=majority";
@@ -210,7 +211,7 @@ app.get('/offers', async function(req, res) {
 
     var dbo = db.db("mydb");
 
-  return await dbo.collection("Offers").find({}, projection: { _id: 1, email: 1, products: 1,  total: 1 }}).toArray(function(err, result) {
+  return await dbo.collection("Offers").find({}).toArray(function(err, result) {
       if (err) throw err;
 
       res.json(result);
