@@ -250,7 +250,9 @@ app.use(router);
 
 const client = new MongoClient(url);
 const dbName = "test";
-
+function timeout(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 async function run() {
     try {
         await client.connect();
