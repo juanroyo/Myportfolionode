@@ -91,8 +91,8 @@ app.post("/cart", (req, res) => {
         port: 465,
        secure: true,
         auth: {
-          user: 'zylenstudio@gmail.com',
-          pass: 'Manolito.1'
+          user: 'pollolocohermano2@gmail.com',
+          pass: 'hostiaputa2'
         }
       });
        var mailOptions = {
@@ -172,10 +172,10 @@ app.post('/contact', function(req, res) {
      service: 'gmail',
      port: 465,
     secure: true,
-     auth: {
-       user: 'zylenstudio@gmail.com',
-       pass: 'Manolito.1'
-     }
+    auth: {
+      user: 'pollolocohermano2@gmail.com',
+      pass: 'hostiaputa2'
+    }
    });
     var mailOptions = {
        from:  emailAddress,
