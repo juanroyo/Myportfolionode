@@ -266,7 +266,7 @@ app.use(router);
 
 const dbName = "test";
 
-const client = new MongoClient(url, { useNewUrlParser: true });
+const client = new MongoClient(url, serveroption);
 async function run() {
     try {
         await client.connect();
