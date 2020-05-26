@@ -29,19 +29,34 @@ app.set('db', require('./endpoints.js'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json({ type: 'application/json' }));
-corsOptions = {
-  origin: "https://zylen.herokuapp.com",
+/*corsOptions = {
+  origin: 'http://localhost:3000',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-};
-app.use(cors(corsOptions));
+};*/
+app.use(cors());
 var serveroption = {
   useNewUrlParser: true,
   connectTimeoutMS: 30000,
-  server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } },
-    replset: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } }
+  server: {
+        socketOptions: {
+          connectTimeoutMS: 60000,
+          keepAlive: 120,
+            poolSize: 10
+
+        }
+    },
+    replset: {
+        loggerLevel: 'debug',
+        socketOptions: {
+          connectTimeoutMS: 60000,
+          keepAlive: 120,
+            poolSize: 10
+
+        }
+    }
 
 }
-const url = "mongodb+srv://juanar:KELi1aO0zTS5pF1v@cluster0-axx5n.mongodb.net/test?retryWrites=true&w=majority";
+const url = "mongodb+srv://juanar:KELi1aO0zTS5pF1v@cluster0-axx5n.mongodb.net/test?retryWrites=true&w=majority&mydb?replicaSet=rs0";
 MongoClient.connect(url, serveroption, function(err, db) {
   if (err) throw err;
   function timeout(ms) {
@@ -122,8 +137,8 @@ app.post("/cart", async function (req, res)  {
             products: req.body.product.addedItems,
             total: product.total
           };
-          await timeout(5000)
-        return  dbo.collection("Payments").insertOne(payment, function(err, result) {
+
+        return await  dbo.collection("Payments").insertOne(payment, function(err, result) {
             if (err) throw err;
             console.log(result)
             res.json(result);
@@ -179,8 +194,8 @@ app.post('/contact', sendEmail, async function(req, res) {
           email: req.body.email,
           textarea: req.body.textarea
           };
-          await timeout(5000)
-    return dbo.collection("Messages").insertOne(myobj, function(err, result) {
+
+    return await dbo.collection("Messages").insertOne(myobj, function(err, result) {
       if (err) throw err;
       console.log("1 document inserted");
       res.json(result);
@@ -195,8 +210,8 @@ app.post('/contact', sendEmail, async function(req, res) {
 app.get('/shop', async function(req, res) {
 
     var dbo = db.db("mydb");
-    await timeout(5000)
-    return  dbo.collection("Albums").find({}).toArray(function(err, result) {
+
+    return await dbo.collection("Albums").find({}).toArray(function(err, result) {
       if (err) throw err;
 
       res.json(result);
@@ -206,8 +221,8 @@ app.get('/shop', async function(req, res) {
 app.get('/data', async function(req, res) {
 
     var dbo = db.db("mydb");
-    await timeout(5000)
-    return  dbo.collection("Albums").find({}).toArray(function(err, result) {
+
+    return await dbo.collection("Albums").find( { projection: { _id: 1, title: 1, author: 1, genre: 1, desc: 1, price:1, img: 1, audio:1 } }).toArray(function(err, result) {
       if (err) throw err;
 
       res.json(result);
@@ -218,8 +233,8 @@ app.get('/data', async function(req, res) {
 app.get('/offers', async function(req, res) {
 
     var dbo = db.db("mydb");
-    await timeout(5000)
-  return dbo.collection("Offers").find({}).toArray(function(err, result) {
+
+  return await dbo.collection("Offers").find( { projection: { _id: 1, title: 1, desc: 1,  img: 1 } }).toArray(function(err, result) {
       if (err) throw err;
 
       res.json(result);
@@ -234,8 +249,8 @@ app.get('/offers', async function(req, res) {
 app.get('/login',async function(req, res) {
 
     var dbo = db.db("mydb");
-await timeout(5000)
-    return dbo.collection("Payments").find({}, { projection: { _id: 1, email: 1, products: 1,  total: 1 } }).toArray(function(err, result) {
+
+    return await dbo.collection("Payments").find( { projection: { _id: 1, email: 1, products: 1,  total: 1 } }).toArray(function(err, result) {
       if (err) throw err;
 
       res.json(result);
@@ -248,11 +263,10 @@ await timeout(5000)
 
 app.use(router);
 
-const client = new MongoClient(url);
+
 const dbName = "test";
-function timeout(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+
+const client = new MongoClient(url, { useNewUrlParser: true });
 async function run() {
     try {
         await client.connect();
@@ -262,8 +276,8 @@ async function run() {
         console.log(err.stack);
     }
     finally {
-      await timeout(5000)
-        return client.close();
+
+        return await client.close();
     }
 }
 
