@@ -88,8 +88,10 @@ app.post("/cart", (req, res) => {
       var bodyMessage = '<table>';
       var mail = nodemailer.createTransport({
         service: 'gmail',
+        port: 465,
+       secure: true,
         auth: {
-          user: 'ju.val.roy@gmail.com',
+          user: 'zylenstudio@gmail.com',
           pass: 'Manolito.1'
         }
       });
@@ -168,8 +170,10 @@ app.post('/contact', function(req, res) {
     console.log("this is the function!")
    var mail = nodemailer.createTransport({
      service: 'gmail',
+     port: 465,
+    secure: true,
      auth: {
-       user: 'ju.val.roy@gmail.com',
+       user: 'zylenstudio@gmail.com',
        pass: 'Manolito.1'
      }
    });
