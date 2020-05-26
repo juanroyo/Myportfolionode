@@ -22,18 +22,18 @@ const methodOverride = require('method-override')
 
 const MongoClient = require('mongodb').MongoClient;
 const router = express.Router();
-var url = "mongodb://localhost:27017/";
+//var url = "mongodb://localhost:27017/";
 app.set('db', require('./endpoints.js'));
 
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json({ type: 'application/json' }));
-/*corsOptions = {
+corsOptions = {
   origin: 'http://localhost:3000',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-};*/
-app.use(cors());
+};
+app.use(cors(corsOptions));
 var serveroption = {
   useNewUrlParser: true,
   connectTimeoutMS: 30000,
@@ -56,7 +56,7 @@ var serveroption = {
     }
 
 }
-const uri = "mongodb+srv://juanar:KELi1aO0zTS5pF1v@cluster0-axx5n.mongodb.net/test?retryWrites=true&w=majority&mydb?replicaSet=rs0";
+const url = "mongodb+srv://juanar:KELi1aO0zTS5pF1v@cluster0-axx5n.mongodb.net/test?retryWrites=true&w=majority&mydb?replicaSet=rs0";
 app.post("/cart", (req, res) => {
      const {product, token} = req.body;
      console.log("PRODUCT", product.title);
