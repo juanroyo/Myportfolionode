@@ -22,7 +22,7 @@ const methodOverride = require('method-override')
 
 const MongoClient = require('mongodb').MongoClient;
 const router = express.Router();
-//var url = "mongodb://localhost:27017/";
+var url = "mongodb://localhost:27017/";
 app.set('db', require('./endpoints.js'));
 
 
@@ -40,8 +40,8 @@ var serveroption = {
   server: {
         socketOptions: {
           connectTimeoutMS: 60000,
-          keepAlive: 120,
-            poolSize: 10
+          keepAlive: 200,
+            poolSize: 200
 
         }
     },
@@ -49,27 +49,20 @@ var serveroption = {
         loggerLevel: 'debug',
         socketOptions: {
           connectTimeoutMS: 60000,
-          keepAlive: 120,
-            poolSize: 10
+          keepAlive: 200,
+            poolSize: 200
 
         }
     }
 
 }
-const url = "mongodb+srv://juanar:KELi1aO0zTS5pF1v@cluster0-axx5n.mongodb.net/test?retryWrites=true&w=majority&mydb?replicaSet=rs0";
-MongoClient.connect(url, serveroption, function(err, db) {
-  if (err) throw err;
-  function timeout(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-//-------------CART----------------
-app.post("/cart", async function (req, res)  {
-
+const uri = "mongodb+srv://juanar:KELi1aO0zTS5pF1v@cluster0-axx5n.mongodb.net/test?retryWrites=true&w=majority&mydb?replicaSet=rs0";
+app.post("/cart", (req, res) => {
      const {product, token} = req.body;
      console.log("PRODUCT", product.title);
      console.log("PRICE", product.total);
      const idempontencyKey = uuidv4()
-     return await stripe.customers.create({
+     return stripe.customers.create({
        email: token.email,
        source: token.id
      }).then(customer => {
@@ -79,7 +72,6 @@ app.post("/cart", async function (req, res)  {
          customer: customer.id,
          //email: token.email,
          description: product.title,
-
        }).catch(err => console.log(err))
      }).then(function sendEmail() {
        var products = req.body;
@@ -89,23 +81,20 @@ app.post("/cart", async function (req, res)  {
        productosParaEnviar.map(function(item, index) {
          return ids = item._id
          })
-
-
+       console.log("hola"+ids)
+       console.log("PRICE", productosParaEnviar);
        console.log("this is the function!")
-
       var emailAddress = token.email;
       var bodyMessage = '<table>';
       var mail = nodemailer.createTransport({
         service: 'gmail',
-        port: 465,
-    secure: true,
         auth: {
-          user: 'zylenstudio@gmail.com',
+          user: 'ju.val.roy@gmail.com',
           pass: 'Manolito.1'
         }
       });
        var mailOptions = {
-          from: 'zylenstudio@gmail.com',
+          from: 'ju.val.roy@gmail.com',
           to: emailAddress,
           subject: 'Sending Email using Node.js',
           html: `<td><h1>thanks for buying ${productosParaEnviar.map(function(item, index) {
@@ -128,52 +117,69 @@ app.post("/cart", async function (req, res)  {
             console.log('Email sent: ' + info.response);
           }
         })
-      }).then( async function(req, res) {
+      }).then(MongoClient.connect(url, function(err, db) {
           if (err) throw err;
           var dbo = db.db("mydb");
-
           var payment = {
             email: token.email,
             products: req.body.product.addedItems,
             total: product.total
           };
-
-        return await  dbo.collection("Payments").insertOne(payment, function(err, result) {
+          dbo.collection("Payments").insertOne(payment, function(err, result) {
             if (err) throw err;
             console.log(result)
             res.json(result);
-
+            db.close();
           })
-        }).then(result =>  res.status(200).json(result))
+        })).then(result =>  res.status(200).json(result))
      .catch(err => console.log(err))
 });
-
-
-
-
-
-  async function sendEmail(req, res) {
-    let emailAddress = req.body.email;
-    let message =  req.body.textarea;
+app.get('/cart', function(req, res) {
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("mydb");
+    dbo.collection("Albums").find().toArray(function(err, result) {
+      if (err) throw err;
+      console.log(result)
+      res.json(result);
+      db.close();
+    });
+  });
+});
+app.get('/cart/:id', function(req, res) {
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("mydb");
+    var albumid = req.params._id;
+    dbo.collection("Albums").find(albumid).toArray(function(err, result) {
+      if (err) throw err;
+      console.log(result)
+      res.json(result);
+      db.close();
+    });
+  });
+});
+//--------CONTACT POST-------------
+app.post('/contact', function(req, res) {
+  function sendEmail() {
+    var emailAddress = req.body.email;
+    var message =  req.body.textarea;
     //var total = req.body.total;
     console.log("this is the function!")
-
-   let mail = nodemailer.createTransport({
+   var mail = nodemailer.createTransport({
      service: 'gmail',
-     port: 465,
-     secure: true,
      auth: {
-       user: 'zylenstudio@gmail.com',
+       user: 'ju.val.roy@gmail.com',
        pass: 'Manolito.1'
      }
    });
-    let mailOptions = {
+    var mailOptions = {
        from:  emailAddress,
-       to: 'zylenstudio@gmail.com',
+       to: 'ju.val.roy@gmail.com',
        subject: 'Sending Email using Node.js',
        html: `<td><p>${message}</p></td><td><p>That was easy!${emailAddress}</p></td>`
      }
-   return await mail.sendMail(mailOptions, function(error, info){
+     mail.sendMail(mailOptions, function(error, info){
        if (error) {
          console.log(error);
        } else {
@@ -181,83 +187,68 @@ app.post("/cart", async function (req, res)  {
        }
      });
    }
-
-
-//--------CONTACT POST-------------
-app.post('/contact', sendEmail, async function(req, res) {
-
-
-
+   sendEmail()
+     MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
     console.log("hola" + req.body);
     var dbo = db.db("mydb");
     var myobj = {
           email: req.body.email,
           textarea: req.body.textarea
           };
-
-    return await dbo.collection("Messages").insertOne(myobj, function(err, result) {
+    dbo.collection("Messages").insertOne(myobj, function(err, result) {
       if (err) throw err;
       console.log("1 document inserted");
       res.json(result);
-
-
+      db.close();
 })
 })
-
-
-
+});
 //-------------SHOP-----------------
-app.get('/shop', async function(req, res) {
-
+app.get('/shop', function(req, res) {
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
     var dbo = db.db("mydb");
-
-    return await dbo.collection("Albums").find({}).toArray(function(err, result) {
+    dbo.collection("Albums").find().toArray(function(err, result) {
       if (err) throw err;
-
       res.json(result);
-
+      db.close();
     });
   });
-app.get('/data', async function(req, res) {
-
+});
+app.get('/offers', function(req, res) {
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
     var dbo = db.db("mydb");
-
-    return await dbo.collection("Albums").find( { projection: { _id: 1, title: 1, author: 1, genre: 1, desc: 1, price:1, img: 1, audio:1 } }).toArray(function(err, result) {
+    dbo.collection("Offers").find().toArray(function(err, result) {
       if (err) throw err;
-
       res.json(result);
-
+      db.close();
     });
   });
-
-app.get('/offers', async function(req, res) {
-
+});
+app.get('/shop/:id', function(req, res) {
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
     var dbo = db.db("mydb");
-
-  return await dbo.collection("Offers").find( { projection: { _id: 1, title: 1, desc: 1,  img: 1 } }).toArray(function(err, result) {
+    dbo.collection("Albums").find().toArray(function(err, result) {
       if (err) throw err;
-
+      console.log(result)
       res.json(result);
-
+      db.close();
     });
   });
-
-
-
-
-
-app.get('/login',async function(req, res) {
-
+});
+app.get('/login', function(req, res) {
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
     var dbo = db.db("mydb");
-
-    return await dbo.collection("Payments").find( { projection: { _id: 1, email: 1, products: 1,  total: 1 } }).toArray(function(err, result) {
+    dbo.collection("Payments").find({}, { projection: { _id: 1, email: 1, products: 1,  total: 1 } }).toArray(function(err, result) {
       if (err) throw err;
-
       res.json(result);
-  db.close();
+      db.close();
     });
   });
-
 });
 
 
