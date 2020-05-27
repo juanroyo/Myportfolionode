@@ -39,7 +39,7 @@ var serveroption = {
   connectTimeoutMS: 30000,
   server: {
         socketOptions: {
-          connectTimeoutMS: 60000,
+          connectTimeoutMS: 10000,
           keepAlive: 200,
             poolSize: 200
 
@@ -48,7 +48,7 @@ var serveroption = {
     replset: {
         loggerLevel: 'debug',
         socketOptions: {
-          connectTimeoutMS: 60000,
+          connectTimeoutMS: 10000,
           keepAlive: 200,
             poolSize: 200
 
