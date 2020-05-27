@@ -33,7 +33,7 @@ app.use(bodyParser.json({ type: 'application/json' }));
   origin: 'https://zylen.herokuapp.com',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 };*/
-app.use(cors(corsOptions));
+app.use(cors());
 var serveroption = {
   useNewUrlParser: true,
   connectTimeoutMS: 30000,
