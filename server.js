@@ -41,16 +41,16 @@ var serveroption = {
         socketOptions: {
           connectTimeoutMS: 10000,
           keepAlive: 200,
-            poolSize: 200
+            poolSize: 100
 
         }
     },
     replset: {
-        loggerLevel: 'debug',
+
         socketOptions: {
           connectTimeoutMS: 10000,
           keepAlive: 200,
-            poolSize: 200
+            poolSize: 100
 
         }
     }
