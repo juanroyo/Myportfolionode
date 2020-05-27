@@ -30,7 +30,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json({ type: 'application/json' }));
 /*corsOptions = {
-  origin: ['https://zylen.herokuapp.com', 'http://zylen.herokuapp.com'],
+  origin: 'https://zylen.herokuapp.com',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 };*/
 app.use(cors(corsOptions));
@@ -39,18 +39,18 @@ var serveroption = {
   connectTimeoutMS: 30000,
   server: {
         socketOptions: {
-          connectTimeoutMS: 10000,
+          connectTimeoutMS: 60000,
           keepAlive: 200,
-            poolSize: 100
+            poolSize: 200
 
         }
     },
     replset: {
-
+        loggerLevel: 'debug',
         socketOptions: {
-          connectTimeoutMS: 10000,
+          connectTimeoutMS: 60000,
           keepAlive: 200,
-            poolSize: 100
+            poolSize: 200
 
         }
     }
