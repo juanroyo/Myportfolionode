@@ -96,9 +96,9 @@ app.post("/cart", (req, res) => {
         }
       });
        var mailOptions = {
-          from: 'ju.val.roy@gmail.com',
+          from: 'pollolocohermano2@gmail.com',
           to: emailAddress,
-          subject: 'Sending Email using Node.js',
+          subject: 'Thanks for buying in ZylenStudio',
           html: `<td><h1>thanks for buying ${productosParaEnviar.map(function(item, index) {
             return item.title
           })}, ${productosParaEnviar.map(function(item, index) {
@@ -110,7 +110,7 @@ app.post("/cart", (req, res) => {
           })}, ${productosParaEnviar.map(function(item, index) {
             return `<a href="${item.download}" download>Download Here
           <a/> `})}
-          , price ${product.total}</h1></td><td><p>That was easy!</p></td>`
+          , price ${product.total}</h1></td>`
         }
         mail.sendMail(mailOptions, function(error, info){
           if (error) {
@@ -180,8 +180,8 @@ app.post('/contact', function(req, res) {
     var mailOptions = {
        from:  emailAddress,
        to: 'ju.val.roy@gmail.com',
-       subject: 'Sending Email using Node.js',
-       html: `<td><p>${message}</p></td><td><p>That was easy!${emailAddress}</p></td>`
+       subject: 'Mensaje de Contacto',
+       html: `<td><p>${message}</p></td><td><p>Email:${emailAddress}</p></td>`
      }
      mail.sendMail(mailOptions, function(error, info){
        if (error) {
@@ -213,7 +213,7 @@ app.get('/shop', function(req, res) {
   MongoClient.connect(url, function(err, db) {
     if (err) throw err;
     var dbo = db.db("mydb");
-    dbo.collection("Albums").find().toArray(function(err, result) {
+    dbo.collection("Albums").find({}, { projection: { _id: 1, title: 1, author: 1, genre: 1, desc: 1, price: 1, img: 1, audio: 1}}).toArray(function(err, result) {
       if (err) throw err;
       res.json(result);
       db.close();
@@ -224,7 +224,7 @@ app.get('/data', function(req, res) {
   MongoClient.connect(url, function(err, db) {
     if (err) throw err;
     var dbo = db.db("mydb");
-    dbo.collection("Albums").find().toArray(function(err, result) {
+    dbo.collection("Albums").find({}, { projection: { _id: 1, title: 1, author: 1, genre: 1, desc: 1, price: 1, img: 1, audio: 1}}).toArray(function(err, result) {
       if (err) throw err;
       res.json(result);
       db.close();
